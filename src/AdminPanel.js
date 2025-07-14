@@ -36,7 +36,7 @@ const AdminPanel = () => {
 
     try {
       await axios.post(`${API_URL}/stock/excel`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
       alert("✅ Stock cargado correctamente desde Excel.");
       setExcelFile(null);
@@ -60,7 +60,7 @@ const AdminPanel = () => {
 
     try {
       await axios.post(`${API_URL}/imagenes`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
       alert("✅ Imágenes cargadas correctamente.");
       setImagenes([]);
@@ -72,13 +72,38 @@ const AdminPanel = () => {
     }
   };
 
+  const handleEliminarRepuestos = async () => {
+    const confirm = window.confirm("¿Estás seguro que querés eliminar TODOS los repuestos?");
+    if (!confirm) return;
+
+    try {
+      await axios.delete(`${API_URL}/stock/eliminar-todo`);
+      alert("✅ Todos los repuestos fueron eliminados.");
+    } catch (error) {
+      console.error("❌ Error al eliminar repuestos:", error);
+      alert("❌ Error al eliminar repuestos. Verifica la conexión.");
+    }
+  };
+
   return (
     <div className="admin-panel">
       {!isLoggedIn ? (
         <form className="login-form" onSubmit={handleLogin}>
           <h2>Acceso Administrador</h2>
-          <input type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} required />
-          <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            type="text"
+            placeholder="Usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <button type="submit">Ingresar</button>
         </form>
       ) : (
@@ -99,11 +124,7 @@ const AdminPanel = () => {
                       required
                     />
                     <button type="submit" disabled={cargandoExcel}>
-                      {cargandoExcel ? (
-                        <span className="loader"></span>
-                      ) : (
-                        "Subir Excel"
-                      )}
+                      {cargandoExcel ? <span className="loader"></span> : "Subir Excel"}
                     </button>
                   </form>
                 </section>
@@ -119,13 +140,16 @@ const AdminPanel = () => {
                       required
                     />
                     <button type="submit" disabled={cargandoImagenes}>
-                      {cargandoImagenes ? (
-                        <span className="loader"></span>
-                      ) : (
-                        "Subir Imágenes"
-                      )}
+                      {cargandoImagenes ? <span className="loader"></span> : "Subir Imágenes"}
                     </button>
                   </form>
+                </section>
+
+                <section>
+                  <h3>🗑️ Eliminar todos los repuestos</h3>
+                  <button onClick={handleEliminarRepuestos}>
+                    Eliminar repuestos
+                  </button>
                 </section>
               </div>
             </div>
