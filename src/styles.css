@@ -280,7 +280,10 @@ html, body {
   }
 }
 
-
+.tabla-stock td {
+  color: white;
+  font-size: 15px;
+}
 
 
 /* === ANIMACIÓN EN FILAS DE LA TABLA === */
@@ -420,4 +423,259 @@ html, body {
   border: none;
   font-size: 22px;
   cursor: pointer;
+}
+/* === NUEVOS BOTONES PERSONALIZADOS === */
+.button {
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px var(--card-shadow);
+  margin: 8px 5px;
+}
+.button:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+.btn-excel {
+  background: linear-gradient(to right, #28a745, #218838);
+}
+.btn-image {
+  background: linear-gradient(to right, #007bff, #0056b3);
+}
+.btn-delete {
+  background: linear-gradient(to right, #dc3545, #c82333);
+}
+.btn-logout {
+  background: #6c757d;
+}
+
+/* === TOAST DE NOTIFICACIONES === */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 24px;
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: toastFade 0.5s forwards;
+}
+.toast.success {
+  background: #28a745;
+}
+.toast.error {
+  background: #dc3545;
+}
+@keyframes toastFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === PREVISUALIZACIÓN DE ARCHIVOS === */
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.preview-item {
+  background: white;
+  border: 2px dashed #ccc;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 160px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.preview-item:hover {
+  transform: scale(1.04);
+}
+.preview-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* === ANIMACIÓN SUTIL === */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* === RESUMEN DE CARGA (POST SUBIDA) === */
+.summary {
+  background: white;
+  margin-top: 25px;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* === VALIDACIÓN INTELIGENTE VISUAL (OPCIONAL) === */
+input:invalid, select:invalid {
+  border: 1px solid crimson;
+  box-shadow: 0 0 5px crimson;
+}
+input:valid, select:valid {
+  border: 1px solid #28a745;
+}
+/* === CHIMICHURRI NAVBAR === */
+.navbar {
+  background: var(--navbar-bg);
+  padding: 16px 28px;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-left {
+  font-size: 28px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.navbar-search {
+  background-color: #111;
+  color: #f1f1f1;
+  border: 2px solid crimson;
+  padding: 12px 16px;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.2s;
+  box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.4);
+}
+.navbar-search:focus {
+  outline: none;
+  box-shadow: 0 0 12px crimson;
+  transform: scale(1.03);
+}
+
+/* === CHIMICHURRI AL BUSCADOR INTELIGENTE === */
+.buscador {
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-width: 600px;
+  animation: fadeIn 0.5s ease;
+}
+
+.buscador input,
+.buscador select {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 2px solid #c21c1c;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  min-width: 160px;
+}
+
+.buscador input:focus,
+.buscador select:focus {
+  outline: none;
+  border-color: #e31e24;
+  box-shadow: 0 0 10px #e31e24;
+  transform: scale(1.03);
+}
+
+/* === RESPONSIVE BUSCADOR INTELIGENTE === */
+@media (max-width: 768px) {
+  .buscador {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .buscador input,
+  .buscador select {
+    width: 90%;
+  }
+}
+/* === CHIMICHURRI FOOTER === */
+.footer {
+  background: #222;
+  color: white;
+  padding: 20px;
+  font-size: 14px;
+  text-align: center;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.25);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.8s ease;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 4px;
+  background: linear-gradient(to right, #e31e24, #ff5a5f, #e31e24);
+  animation: glowline 4s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes glowline {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(50%); }
+}
+
+.footer p {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.footer .footer-info {
+  max-width: 800px;
+  font-size: 13px;
+  text-align: justify;
+  line-height: 1.6;
+  margin: auto;
+  padding: 5px 15px;
+  border-left: 3px solid #ff5a5f;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 5px rgba(255, 90, 95, 0.3);
+}
+
+/* === RESPONSIVE FOOTER === */
+@media (max-width: 768px) {
+  .footer .footer-info {
+    max-width: 90%;
+    font-size: 12px;
+  }
 }

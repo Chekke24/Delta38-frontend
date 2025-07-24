@@ -1,5 +1,10 @@
+// Archivo: AdminPanel.jsx
+
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaFileExcel, FaImages, FaTrashAlt, FaSignOutAlt } from "react-icons/fa";
 import "./styles.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -21,28 +26,28 @@ const AdminPanel = () => {
     if (username === adminUser.username && password === adminUser.password) {
       setIsLoggedIn(true);
       setModalVisible(true);
+      toast.success("Bienvenido, administrador.");
     } else {
-      alert("Usuario o contraseña incorrectos");
+      toast.error("Usuario o contraseña incorrectos");
     }
   };
 
   const handleExcelSubmit = async (e) => {
     e.preventDefault();
-    if (!excelFile) return alert("Debe seleccionar un archivo Excel.");
+    if (!excelFile) return toast.warn("Debe seleccionar un archivo Excel.");
     setCargandoExcel(true);
 
     const formData = new FormData();
     formData.append("archivo", excelFile);
 
     try {
-      await axios.post(`${API_URL}/stock/excel`, formData, {
+       await axios.post(`${API_URL}/stock/excel`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("✅ Stock cargado correctamente desde Excel.");
+      toast.success("✅ Excel cargado correctamente.");
       setExcelFile(null);
     } catch (error) {
-      console.error("❌ Error al cargar Excel:", error);
-      alert("❌ Error al cargar Excel. Verifica el formato o la conexión.");
+      toast.error("❌ Error al cargar Excel. Verifica formato o conexión.");
     } finally {
       setCargandoExcel(false);
     }
@@ -50,7 +55,7 @@ const AdminPanel = () => {
 
   const handleImagenesSubmit = async (e) => {
     e.preventDefault();
-    if (imagenes.length === 0) return alert("Debe subir al menos una imagen.");
+    if (imagenes.length === 0) return toast.warn("Debe subir al menos una imagen.");
     setCargandoImagenes(true);
 
     const formData = new FormData();
@@ -62,48 +67,42 @@ const AdminPanel = () => {
       await axios.post(`${API_URL}/imagenes`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("✅ Imágenes cargadas correctamente.");
+      toast.success("✅ Imágenes subidas correctamente.");
       setImagenes([]);
     } catch (error) {
-      console.error("❌ Error al subir imágenes:", error);
-      alert("❌ Error al subir imágenes. Verifica la conexión.");
+      toast.error("❌ Error al subir imágenes. Verifica la conexión.");
     } finally {
       setCargandoImagenes(false);
     }
   };
 
   const handleEliminarRepuestos = async () => {
-    const confirm = window.confirm("¿Estás seguro que querés eliminar TODOS los repuestos?");
-    if (!confirm) return;
+    if (!window.confirm("¿Estás seguro que querés eliminar TODOS los repuestos?")) return;
 
     try {
       await axios.delete(`${API_URL}/stock/eliminar-todo`);
-      alert("✅ Todos los repuestos fueron eliminados.");
+      toast.success("✅ Repuestos eliminados correctamente.");
     } catch (error) {
-      console.error("❌ Error al eliminar repuestos:", error);
-      alert("❌ Error al eliminar repuestos. Verifica la conexión.");
+      toast.error("❌ Error al eliminar repuestos. Verifica la conexión.");
     }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername("");
+    setPassword("");
+    setModalVisible(false);
+    toast.info("Sesión cerrada");
   };
 
   return (
     <div className="admin-panel">
+      <ToastContainer />
       {!isLoggedIn ? (
         <form className="login-form" onSubmit={handleLogin}>
           <h2>Acceso Administrador</h2>
-          <input
-            type="text"
-            placeholder="Usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit">Ingresar</button>
         </form>
       ) : (
@@ -111,45 +110,39 @@ const AdminPanel = () => {
           <div className="modal" onClick={() => setModalVisible(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <span className="close" onClick={() => setModalVisible(false)}>&times;</span>
+              <button className="logout-btn" onClick={handleLogout}><FaSignOutAlt /> Cerrar sesión</button>
               <div className="panel-contenido">
                 <h2>Gestión del Taller</h2>
 
                 <section>
-                  <h3>📦 Subir archivo Excel de repuestos</h3>
+                  <h3><FaFileExcel /> Subir Excel de repuestos</h3>
                   <form onSubmit={handleExcelSubmit}>
-                    <input
-                      type="file"
-                      accept=".xlsx, .xls, .xlsm"
-                      onChange={(e) => setExcelFile(e.target.files[0])}
-                      required
-                    />
-                    <button type="submit" disabled={cargandoExcel}>
+                    <input type="file" accept=".xlsx, .xls, .xlsm" onChange={(e) => setExcelFile(e.target.files[0])} required />
+                    {excelFile && <p className="file-preview">📄 {excelFile.name}</p>}
+                    <button type="submit" className="btn green" disabled={cargandoExcel}>
                       {cargandoExcel ? <span className="loader"></span> : "Subir Excel"}
                     </button>
                   </form>
                 </section>
 
                 <section>
-                  <h3>🖼️ Subir imágenes ilustrativas (hasta 10)</h3>
+                  <h3><FaImages /> Subir imágenes ilustrativas</h3>
                   <form onSubmit={handleImagenesSubmit}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={(e) => setImagenes(Array.from(e.target.files).slice(0, 10))}
-                      required
-                    />
-                    <button type="submit" disabled={cargandoImagenes}>
+                    <input type="file" accept="image/*" multiple onChange={(e) => setImagenes(Array.from(e.target.files).slice(0, 10))} required />
+                    <div className="preview-imgs">
+                      {imagenes.map((img, i) => (
+                        <img key={i} src={URL.createObjectURL(img)} alt={`img-${i}`} className="mini" />
+                      ))}
+                    </div>
+                    <button type="submit" className="btn blue" disabled={cargandoImagenes}>
                       {cargandoImagenes ? <span className="loader"></span> : "Subir Imágenes"}
                     </button>
                   </form>
                 </section>
 
                 <section>
-                  <h3>🗑️ Eliminar todos los repuestos</h3>
-                  <button onClick={handleEliminarRepuestos}>
-                    Eliminar repuestos
-                  </button>
+                  <h3><FaTrashAlt /> Eliminar todos los repuestos</h3>
+                  <button className="btn red" onClick={handleEliminarRepuestos}>Eliminar Repuestos</button>
                 </section>
               </div>
             </div>
