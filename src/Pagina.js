@@ -14,7 +14,6 @@ const Pagina = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [marcaFiltro, setMarcaFiltro] = useState("");
 
-  // Obtener resultados cuando se escribe en el buscador
   useEffect(() => {
     if (busqueda.trim() === "") {
       setProductosFiltrados([]);
@@ -42,12 +41,10 @@ const Pagina = () => {
     setMostrarAdmin(true);
   };
 
-  // Filtro por marca
   const productosFiltradosConFiltro = productosFiltrados.filter((prod) => {
     return !marcaFiltro || prod.MARCA === marcaFiltro;
   });
 
-  // Generar opciones únicas para el filtro de marca
   const marcasUnicas = [...new Set(productosFiltrados.map((p) => p.MARCA))];
 
   return (
@@ -101,6 +98,7 @@ const Pagina = () => {
                     <th>Código</th>
                     <th>Marca</th>
                     <th>Stock</th>
+                    <th>Solicitar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -109,6 +107,16 @@ const Pagina = () => {
                       <td>{prod.CODIGO}</td>
                       <td>{prod.MARCA}</td>
                       <td>{prod.STOCK}</td>
+                      <td>
+                        <a
+                          href={`https://wa.me/+5493434050809?text=Hola! Me interesa este repuesto:%0A🔧 *Código:* ${prod.CODIGO}%0A🏷️ *Marca:* ${prod.MARCA}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="whatsapp-button"
+                        >
+                          WhatsApp
+                        </a>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
