@@ -13,6 +13,8 @@ const Pagina = () => {
   const [mostrarAdmin, setMostrarAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [marcaFiltro, setMarcaFiltro] = useState("");
+  const [modeloFiltro, setModeloFiltro] = useState("");
+  const [anioFiltro, setAnioFiltro] = useState("");
 
   useEffect(() => {
     if (busqueda.trim() === "") {
@@ -42,10 +44,12 @@ const Pagina = () => {
   };
 
   const productosFiltradosConFiltro = productosFiltrados.filter((prod) => {
-    return !marcaFiltro || prod.MARCA === marcaFiltro;
+    return (
+      (!marcaFiltro || prod.marca === marcaFiltro) &&
+      (!modeloFiltro || prod.modelo === modeloFiltro) &&
+      (!anioFiltro || prod.anio === anioFiltro)
+    );
   });
-
-  const marcasUnicas = [...new Set(productosFiltrados.map((prod) => prod.MARCA))];
 
   return (
     <div className="pagina">
@@ -80,9 +84,22 @@ const Pagina = () => {
           <div className="filtros">
             <select onChange={(e) => setMarcaFiltro(e.target.value)}>
               <option value="">Todas las marcas</option>
-              {marcasUnicas.map((marca, i) => (
-                <option key={i} value={marca}>{marca}</option>
-              ))}
+              <option value="Toyota">Toyota</option>
+              <option value="Ford">Ford</option>
+              <option value="Chevrolet">Chevrolet</option>
+            </select>
+            <select onChange={(e) => setModeloFiltro(e.target.value)}>
+              <option value="">Todos los modelos</option>
+              <option value="Corolla">Corolla</option>
+              <option value="Focus">Focus</option>
+              <option value="Onix">Onix</option>
+            </select>
+            <select onChange={(e) => setAnioFiltro(e.target.value)}>
+              <option value="">Todos los años</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
             </select>
           </div>
 
@@ -93,21 +110,23 @@ const Pagina = () => {
               <table className="tabla-stock">
                 <thead>
                   <tr>
-                    <th>Código</th>
                     <th>Marca</th>
-                    <th>Stock</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Código</th>
                     <th>Solicitar</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {productosFiltradosConFiltro.map((prod, index) => (
-                    <tr key={index}>
-                      <td>{prod.CODIGO}</td>
-                      <td>{prod.MARCA}</td>
-                      <td>{prod.STOCK}</td>
+                  {productosFiltradosConFiltro.map((prod) => (
+                    <tr key={prod.id}>
+                      <td>{prod.marca}</td>
+                      <td>{prod.modelo}</td>
+                      <td>{prod.anio}</td>
+                      <td>{prod.codigo}</td>
                       <td>
                         <a
-                          href={`https://wa.me/+5493434050809?text=Hola! Me interesa este repuesto:%0A🔧 *Código:* ${prod.CODIGO}%0A🏷️ *Marca:* ${prod.MARCA}%0A📦 *Stock:* ${prod.STOCK}`}
+                          href={`https://wa.me/+5493434050809?text=Hola! Me interesa este repuesto:%0A🔧 *Código:* ${prod.codigo}%0A🚗 *Marca:* ${prod.marca}%0A📘 *Modelo:* ${prod.modelo}%0A📅 *Año:* ${prod.anio}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="whatsapp-button"
